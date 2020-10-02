@@ -12,6 +12,8 @@ export default class QuillCursors {
   private readonly _boundsContainer: HTMLElement;
   private readonly _options: IQuillCursorsOptions;
   private _currentSelection: IQuillRange;
+  private _lastCaretStartIndex: number;
+  private _lastCaretEndIndex: number;
 
   public constructor(quill: any, options: IQuillCursorsOptions = {}) {
     this._quill = quill;
@@ -19,6 +21,9 @@ export default class QuillCursors {
     this._container = this._quill.addContainer(this._options.containerClass);
     this._boundsContainer = this._options.boundsContainer || this._quill.container;
     this._currentSelection = this._quill.getSelection();
+
+    this._lastCaretStartIndex = 0;
+    this._lastCaretEndIndex = 0;
 
     this._registerSelectionChangeListeners();
     this._registerTextChangeListener();
@@ -112,12 +117,24 @@ export default class QuillCursors {
     cursor.show();
 
     const containerRectangle = this._boundsContainer.getBoundingClientRect();
+    var endBounds = null;
 
-    //TODO: We need to decide where to show the caret
-    // - Pass in additional info
-    // - Track state to detect move left or move right
-    const endBounds = this._quill.getBounds(endIndex);
-    cursor.updateCaret(endBounds, containerRectangle);
+    if (this._lastCaretStartIndex != startIndex) 
+    {
+      endBounds = this._quill.getBounds(startIndex);            
+    }
+    if (this._lastCaretEndIndex != endIndex)
+    {
+      endBounds = this._quill.getBounds(endIndex);
+    }
+
+    this._lastCaretStartIndex = startIndex;
+    this._lastCaretEndIndex = endIndex;
+
+    if (endBounds != null)
+    {
+      cursor.updateCaret(endBounds, containerRectangle);
+    }    
   }
 
   private _indexWithinQuillBounds(index: number): number {
