@@ -1,7 +1,6 @@
 import IQuillCursorsOptions from './i-quill-cursors-options';
 import Cursor from './cursor';
 import IQuillRange from './i-range';
-import * as RangeFix from 'rangefix';
 import template from './template';
 import ResizeObserver from 'resize-observer-polyfill';
 import Delta = require('quill-delta');
@@ -67,15 +66,6 @@ export default class QuillCursors {
     this.cursors().forEach((cursor: Cursor) => this.removeCursor(cursor.id));
   }
 
-  public toggleFlag(id: string, shouldShow?: boolean): void {
-    const cursor = this._cursors[id];
-    if (!cursor) {
-      return;
-    }
-
-    cursor.toggleFlag(shouldShow);
-  }
-
   public cursors(): Cursor[] {
     return Object.keys(this._cursors)
       .map((key) => this._cursors[key]);
@@ -106,7 +96,7 @@ export default class QuillCursors {
 
   private _updateCursor(cursor: Cursor): void {
     if (!cursor.range) {
-      return cursor.hide();
+      return;
     }
 
     const startIndex = this._indexWithinQuillBounds(cursor.range.index);
@@ -123,14 +113,11 @@ export default class QuillCursors {
 
     const containerRectangle = this._boundsContainer.getBoundingClientRect();
 
+    //TODO: We need to decide where to show the caret
+    // - Pass in additional info
+    // - Track state to detect move left or move right
     const endBounds = this._quill.getBounds(endIndex);
     cursor.updateCaret(endBounds, containerRectangle);
-
-    const ranges = this._lineRanges(cursor, startLeaf, endLeaf);
-    const selectionRectangles = ranges
-      .reduce((rectangles, range) => rectangles.concat(Array.from(RangeFix.getClientRects(range))), []);
-
-    cursor.updateSelection(selectionRectangles, containerRectangle);
   }
 
   private _indexWithinQuillBounds(index: number): number {
@@ -184,47 +171,6 @@ export default class QuillCursors {
     options.transformOnTextChange = !!options.transformOnTextChange;
 
     return options;
-  }
-
-  // Rather than just use the start leaf and end leaf directly to build a single range,
-  // we instead find all the lines in that single range and create a sub-range for each
-  // of these lines. This avoids the browser creating a range around an entire paragraph
-  // element, and instead forces the browser to draw rectangles around the paragraph's
-  // constituent text nodes, which is more consistent with the existing browser selection
-  // behaviour.
-  private _lineRanges(cursor: Cursor, startLeaf: any[], endLeaf: any[]): Range[] {
-    const lines = this._quill.getLines(cursor.range);
-    return lines.reduce((ranges: Range[], line: any, index: number) => {
-      if (!line.children) {
-        const singleElementRange = document.createRange();
-        singleElementRange.selectNode(line.domNode);
-        return ranges.concat(singleElementRange);
-      }
-
-      const [rangeStart, startOffset] = index === 0 ?
-        startLeaf :
-        line.path(0).pop();
-
-      const [rangeEnd, endOffset] = index === lines.length - 1 ?
-        endLeaf :
-        line.path(line.length() - 1).pop();
-
-      const range = document.createRange();
-
-      if (rangeStart.domNode.nodeType === Node.TEXT_NODE) {
-        range.setStart(rangeStart.domNode, startOffset);
-      } else {
-        range.setStartBefore(rangeStart.domNode);
-      }
-
-      if (rangeEnd.domNode.nodeType === Node.TEXT_NODE) {
-        range.setEnd(rangeEnd.domNode, endOffset);
-      } else {
-        range.setEndAfter(rangeEnd.domNode);
-      }
-
-      return ranges.concat(range);
-    }, []);
   }
 
   private _transformCursors(delta: any): void {
