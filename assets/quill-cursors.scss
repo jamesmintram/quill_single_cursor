@@ -42,6 +42,18 @@ $transition-func: cubic-bezier(0.250, 0.460, 0.450, 0.940);
  * CURSORS *
  ***********/
 
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+
 .ql-container {
   // We technically shouldn't need this, because Quill includes this styling
   // by default, but if it ever gets removed from the core library, or if
@@ -116,6 +128,9 @@ $transition-func: cubic-bezier(0.250, 0.460, 0.450, 0.940);
       margin-left: -($border-width-base / 2);
 
       background-color: attr(data-color);
+
+      animation: blink-animation 1s steps(5, start) infinite;
+      -webkit-animation: blink-animation 1s steps(5, start) infinite;
     }
   }
 
