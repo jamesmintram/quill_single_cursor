@@ -17,32 +17,24 @@ export default class Cursor {
   public static readonly HIDDEN_CLASS = 'hidden';
   public static readonly NO_DELAY_CLASS = 'no-delay';
 
-  public readonly id: string;
-  public readonly name: string;
-  public readonly color: string;
   public range: IQuillRange;
 
   private _el: HTMLElement;
   private _caretEl: HTMLElement;
 
-  public constructor(id: string, name: string, color: string) {
-    this.id = id;
-    this.name = name;
-    this.color = color;
+  public constructor() {
   }
 
   public build(options: IQuillCursorsOptions): HTMLElement {
     const element = document.createElement(Cursor.CONTAINER_ELEMENT_TAG);
     element.classList.add(Cursor.CURSOR_CLASS);
-    element.id = `ql-cursor-${ this.id }`;
+    element.id = `ql-cursor-caret`;
     element.innerHTML = options.template;
     const selectionElement = element.getElementsByClassName(Cursor.SELECTION_CLASS)[0] as HTMLElement;
     const caretContainerElement = element.getElementsByClassName(Cursor.CARET_CONTAINER_CLASS)[0] as HTMLElement;
     const caretElement = caretContainerElement.getElementsByClassName(Cursor.CARET_CLASS)[0] as HTMLElement;
     
-    caretElement.style.backgroundColor = this.color;
-
-    element.getElementsByClassName(Cursor.NAME_CLASS)[0].textContent = this.name;
+    caretElement.style.backgroundColor = "black";
 
     this._el = element;
     this._caretEl = caretContainerElement;
@@ -69,5 +61,4 @@ export default class Cursor {
     this._caretEl.style.left = `${rectangle.left * 1}px`;
     this._caretEl.style.height = `${rectangle.height * 1}px`;
   }
-
 }

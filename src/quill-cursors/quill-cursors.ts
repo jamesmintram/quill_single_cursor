@@ -6,7 +6,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import Delta = require('quill-delta');
 
 export default class QuillCursors {
-  private readonly _cursors: { [id: string]: Cursor } = {};
+  private readonly _cursor:  Cursor;
   private readonly _quill: any;
   private readonly _container: HTMLElement;
   private readonly _boundsContainer: HTMLElement;
@@ -32,66 +32,42 @@ export default class QuillCursors {
     // FIXME: Cleanup
     // - Remove concept of multiple cursors
     // - Remove external API for cursor positioning etc?
-    let id = "cursor";
-    let cursor = new Cursor(id, name, "black");
-    this._cursors[id] = cursor;
-    const element = cursor.build(this._options);
+    // let id = "cursor";
+    // let cursor = new Cursor(id, name, "black");
+    // this._cursors[id] = cursor;
+    // const element = cursor.build(this._options);
+    // this._container.appendChild(element);
+
+
+    this._cursor = new Cursor();
+    const element = this._cursor.build(this._options);
     this._container.appendChild(element);
   }
 
-  public createCursor(id: string, name: string, color: string): Cursor {
-    let cursor = this._cursors[id];
+  // public createCursor(id: string, name: string, color: string): Cursor {
+  //   let cursor = this._cursors[id];
 
-    if (!cursor) {
-      cursor = new Cursor(id, name, color);
-      this._cursors[id] = cursor;
-      const element = cursor.build(this._options);
-      this._container.appendChild(element);
-    }
+  //   if (!cursor) {
+  //     cursor = new Cursor(id, name, color);
+  //     this._cursors[id] = cursor;
+  //     const element = cursor.build(this._options);
+  //     this._container.appendChild(element);
+  //   }
 
-    return cursor;
-  }
+  //   return cursor;
+  // }
 
-  public moveCursor(id: string, range: IQuillRange): void {
-    const cursor = this._cursors[id];
-    if (!cursor) {
-      return;
-    }
-
-    cursor.range = range;
-    this._updateCursor(cursor);
-  }
-
-  public removeCursor(id: string): void {
-    const cursor = this._cursors[id];
-    if (!cursor) {
-      return;
-    }
-
-    cursor.remove();
-    delete this._cursors[id];
-  }
-
-  public update(): void {
-    this.cursors().forEach((cursor: Cursor) => this._updateCursor(cursor));
-  }
-
-  public clearCursors(): void {
-    this.cursors().forEach((cursor: Cursor) => this.removeCursor(cursor.id));
-  }
-
-  public cursors(): Cursor[] {
-    return Object.keys(this._cursors)
-      .map((key) => this._cursors[key]);
+  public _moveCursor(range: IQuillRange): void {
+    this._cursor.range = range;
+    this._updateCursor(this._cursor);
   }
 
   private _registerSelectionChangeListeners(): void {
     this._quill.on(
       this._quill.constructor.events.SELECTION_CHANGE,
       (selection: IQuillRange) => {
-        console.log("SELECTION CAHNGED");
         this._currentSelection = selection;
-        this.moveCursor('cursor', selection);
+        this._moveCursor(selection);
       },
     );
   }
@@ -105,8 +81,8 @@ export default class QuillCursors {
 
   private _registerDomListeners(): void {
     const editor = this._quill.container.getElementsByClassName('ql-editor')[0];
-    editor.addEventListener('scroll', () => this.update());
-    const resizeObserver = new ResizeObserver(() => this.update());
+    editor.addEventListener('scroll', () => this._updateCursor(this._cursor));
+    const resizeObserver = new ResizeObserver(() => this._updateCursor(this._cursor));
     resizeObserver.observe(editor);
 
     //FIXME: This is probably a bad idea
@@ -176,7 +152,7 @@ export default class QuillCursors {
 
       if (this._options.selectionChangeSource) {
         this._emitSelection();
-        this.update();
+        this._updateCursor(this._cursor);
       }
     });
   }
@@ -210,11 +186,9 @@ export default class QuillCursors {
   private _transformCursors(delta: any): void {
     delta = new Delta(delta);
 
-    this.cursors()
-      .filter((cursor: Cursor) => cursor.range)
-      .forEach((cursor: Cursor) => {
-        cursor.range.index = delta.transformPosition(cursor.range.index);
-        this._updateCursor(cursor);
-      });
+    if (this._cursor.range) {  
+      this._cursor.range.index = delta.transformPosition(this._cursor.range.index);
+      this._updateCursor(this._cursor);
+    }
   }
 }
