@@ -29,33 +29,10 @@ export default class QuillCursors {
     this._registerTextChangeListener();
     this._registerDomListeners();
 
-    // FIXME: Cleanup
-    // - Remove concept of multiple cursors
-    // - Remove external API for cursor positioning etc?
-    // let id = "cursor";
-    // let cursor = new Cursor(id, name, "black");
-    // this._cursors[id] = cursor;
-    // const element = cursor.build(this._options);
-    // this._container.appendChild(element);
-
-
     this._cursor = new Cursor();
     const element = this._cursor.build(this._options);
     this._container.appendChild(element);
   }
-
-  // public createCursor(id: string, name: string, color: string): Cursor {
-  //   let cursor = this._cursors[id];
-
-  //   if (!cursor) {
-  //     cursor = new Cursor(id, name, color);
-  //     this._cursors[id] = cursor;
-  //     const element = cursor.build(this._options);
-  //     this._container.appendChild(element);
-  //   }
-
-  //   return cursor;
-  // }
 
   public _moveCursor(range: IQuillRange): void {
     this._cursor.range = range;
