@@ -1,6 +1,5 @@
 import IQuillCursorsOptions from './i-quill-cursors-options';
 import IQuillRange from './i-range';
-import tinycolor = require('tinycolor2');
 
 export default class Cursor {
   public static readonly CONTAINER_ELEMENT_TAG = 'SPAN';
@@ -22,19 +21,16 @@ export default class Cursor {
   private _el: HTMLElement;
   private _caretEl: HTMLElement;
 
-  public constructor() {
-  }
-
   public build(options: IQuillCursorsOptions): HTMLElement {
     const element = document.createElement(Cursor.CONTAINER_ELEMENT_TAG);
     element.classList.add(Cursor.CURSOR_CLASS);
     element.id = `ql-cursor-caret`;
     element.innerHTML = options.template;
-    const selectionElement = element.getElementsByClassName(Cursor.SELECTION_CLASS)[0] as HTMLElement;
+
     const caretContainerElement = element.getElementsByClassName(Cursor.CARET_CONTAINER_CLASS)[0] as HTMLElement;
     const caretElement = caretContainerElement.getElementsByClassName(Cursor.CARET_CLASS)[0] as HTMLElement;
-    
-    caretElement.style.backgroundColor = "black";
+
+    caretElement.style.backgroundColor = 'black';
 
     this._el = element;
     this._caretEl = caretContainerElement;
@@ -47,7 +43,6 @@ export default class Cursor {
   }
 
   public hide(): void {
-    console.error("HIDING");    
     this._el.classList.add(Cursor.HIDDEN_CLASS);
   }
 
@@ -56,7 +51,7 @@ export default class Cursor {
   }
 
 
-  public updateCaret(rectangle: ClientRect, container: ClientRect): void {
+  public updateCaret(rectangle: ClientRect, _container: ClientRect): void {
     this._caretEl.style.top = `${rectangle.top * 1}px`;
     this._caretEl.style.left = `${rectangle.left * 1}px`;
     this._caretEl.style.height = `${rectangle.height * 1}px`;

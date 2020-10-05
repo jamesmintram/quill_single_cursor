@@ -14,16 +14,12 @@ export default class Cursor {
     static readonly NAME_CLASS = "ql-cursor-name";
     static readonly HIDDEN_CLASS = "hidden";
     static readonly NO_DELAY_CLASS = "no-delay";
-    readonly id: string;
-    readonly name: string;
-    readonly color: string;
     range: IQuillRange;
     private _el;
     private _caretEl;
-    constructor(id: string, name: string, color: string);
     build(options: IQuillCursorsOptions): HTMLElement;
     show(): void;
     hide(): void;
     remove(): void;
-    updateCaret(rectangle: ClientRect, container: ClientRect): void;
+    updateCaret(rectangle: ClientRect, _container: ClientRect): void;
 }

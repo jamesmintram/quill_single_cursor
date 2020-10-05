@@ -4,9 +4,8 @@ import IQuillRange from './i-range';
 import template from './template';
 import ResizeObserver from 'resize-observer-polyfill';
 import Delta = require('quill-delta');
-
 export default class QuillCursors {
-  private readonly _cursor:  Cursor;
+  private readonly _cursor: Cursor;
   private readonly _quill: any;
   private readonly _container: HTMLElement;
   private readonly _boundsContainer: HTMLElement;
@@ -62,18 +61,17 @@ export default class QuillCursors {
     const resizeObserver = new ResizeObserver(() => this._updateCursor(this._cursor));
     resizeObserver.observe(editor);
 
-    //FIXME: This is probably a bad idea
+    // FIXME: This is probably a bad idea
     document.addEventListener('selectionchange', () => {
       this._quill.getSelection();
     });
   }
 
   private _updateCursor(cursor: Cursor): void {
-    
     if (!cursor.range) {
       return;
     }
-    
+
     const startIndex = this._indexWithinQuillBounds(cursor.range.index);
     const endIndex = this._indexWithinQuillBounds(cursor.range.index + cursor.range.length);
 
@@ -87,24 +85,21 @@ export default class QuillCursors {
     cursor.show();
 
     const containerRectangle = this._boundsContainer.getBoundingClientRect();
-    var endBounds = null;
+    let endBounds = null;
 
-    if (this._lastCaretStartIndex != startIndex) 
-    {
-      endBounds = this._quill.getBounds(startIndex);            
+    if (this._lastCaretStartIndex != startIndex) {
+      endBounds = this._quill.getBounds(startIndex);
     }
-    if (this._lastCaretEndIndex != endIndex)
-    {
+    if (this._lastCaretEndIndex != endIndex) {
       endBounds = this._quill.getBounds(endIndex);
     }
 
     this._lastCaretStartIndex = startIndex;
     this._lastCaretEndIndex = endIndex;
 
-    if (endBounds != null)
-    {
+    if (endBounds != null) {
       cursor.updateCaret(endBounds, containerRectangle);
-    }    
+    }
   }
 
   private _indexWithinQuillBounds(index: number): number {
@@ -163,7 +158,7 @@ export default class QuillCursors {
   private _transformCursors(delta: any): void {
     delta = new Delta(delta);
 
-    if (this._cursor.range) {  
+    if (this._cursor.range) {
       this._cursor.range.index = delta.transformPosition(this._cursor.range.index);
       this._updateCursor(this._cursor);
     }

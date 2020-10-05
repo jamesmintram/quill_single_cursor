@@ -1,8 +1,7 @@
 import IQuillCursorsOptions from './i-quill-cursors-options';
-import Cursor from './cursor';
 import IQuillRange from './i-range';
 export default class QuillCursors {
-    private readonly _cursors;
+    private readonly _cursor;
     private readonly _quill;
     private readonly _container;
     private readonly _boundsContainer;
@@ -11,12 +10,7 @@ export default class QuillCursors {
     private _lastCaretStartIndex;
     private _lastCaretEndIndex;
     constructor(quill: any, options?: IQuillCursorsOptions);
-    createCursor(id: string, name: string, color: string): Cursor;
-    moveCursor(id: string, range: IQuillRange): void;
-    removeCursor(id: string): void;
-    update(): void;
-    clearCursors(): void;
-    cursors(): Cursor[];
+    _moveCursor(range: IQuillRange): void;
     private _registerSelectionChangeListeners;
     private _registerTextChangeListener;
     private _registerDomListeners;
