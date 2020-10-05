@@ -65,9 +65,9 @@ export default class Cursor {
 
 
   public updateCaret(rectangle: ClientRect, container: ClientRect): void {
-    this._caretEl.style.top = `${rectangle.top * 2}px`;
-    this._caretEl.style.left = `${rectangle.left * 2}px`;
-    this._caretEl.style.height = `${rectangle.height * 2}px`;
+    this._caretEl.style.top = `${rectangle.top * 1}px`;
+    this._caretEl.style.left = `${rectangle.left * 1}px`;
+    this._caretEl.style.height = `${rectangle.height * 1}px`;
   }
 
 }

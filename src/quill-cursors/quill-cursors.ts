@@ -28,6 +28,15 @@ export default class QuillCursors {
     this._registerSelectionChangeListeners();
     this._registerTextChangeListener();
     this._registerDomListeners();
+
+    // FIXME: Cleanup
+    // - Remove concept of multiple cursors
+    // - Remove external API for cursor positioning etc?
+    let id = "cursor";
+    let cursor = new Cursor(id, name, "black");
+    this._cursors[id] = cursor;
+    const element = cursor.build(this._options);
+    this._container.appendChild(element);
   }
 
   public createCursor(id: string, name: string, color: string): Cursor {
@@ -80,7 +89,9 @@ export default class QuillCursors {
     this._quill.on(
       this._quill.constructor.events.SELECTION_CHANGE,
       (selection: IQuillRange) => {
+        console.log("SELECTION CAHNGED");
         this._currentSelection = selection;
+        this.moveCursor('cursor', selection);
       },
     );
   }
@@ -97,13 +108,19 @@ export default class QuillCursors {
     editor.addEventListener('scroll', () => this.update());
     const resizeObserver = new ResizeObserver(() => this.update());
     resizeObserver.observe(editor);
+
+    //FIXME: This is probably a bad idea
+    document.addEventListener('selectionchange', () => {
+      this._quill.getSelection();
+    });
   }
 
   private _updateCursor(cursor: Cursor): void {
+    
     if (!cursor.range) {
       return;
     }
-
+    
     const startIndex = this._indexWithinQuillBounds(cursor.range.index);
     const endIndex = this._indexWithinQuillBounds(cursor.range.index + cursor.range.length);
 
