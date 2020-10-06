@@ -17,7 +17,9 @@ export default class Cursor {
     range: IQuillRange;
     private _el;
     private _caretEl;
+    private _scale;
     build(options: IQuillCursorsOptions): HTMLElement;
+    setScale(scale: number): void;
     show(): void;
     hide(): void;
     remove(): void;

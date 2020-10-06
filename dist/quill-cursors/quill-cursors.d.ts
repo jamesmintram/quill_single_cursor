@@ -10,6 +10,7 @@ export default class QuillCursors {
     private _lastCaretStartIndex;
     private _lastCaretEndIndex;
     constructor(quill: any, options?: IQuillCursorsOptions);
+    setScale(scale: number): void;
     _moveCursor(range: IQuillRange): void;
     private _registerSelectionChangeListeners;
     private _registerTextChangeListener;

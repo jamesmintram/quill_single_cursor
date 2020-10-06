@@ -20,6 +20,7 @@ export default class Cursor {
 
   private _el: HTMLElement;
   private _caretEl: HTMLElement;
+  private _scale = 1;
 
   public build(options: IQuillCursorsOptions): HTMLElement {
     const element = document.createElement(Cursor.CONTAINER_ELEMENT_TAG);
@@ -38,6 +39,10 @@ export default class Cursor {
     return this._el;
   }
 
+  public setScale(scale: number): void {
+    this._scale = scale;
+  }
+
   public show(): void {
     this._el.classList.remove(Cursor.HIDDEN_CLASS);
   }
@@ -52,8 +57,8 @@ export default class Cursor {
 
 
   public updateCaret(rectangle: ClientRect, _container: ClientRect): void {
-    this._caretEl.style.top = `${rectangle.top * 1}px`;
-    this._caretEl.style.left = `${rectangle.left * 1}px`;
-    this._caretEl.style.height = `${rectangle.height * 1}px`;
+    this._caretEl.style.top = `${rectangle.top * this._scale}px`;
+    this._caretEl.style.left = `${rectangle.left * this._scale}px`;
+    this._caretEl.style.height = `${rectangle.height * this._scale}px`;
   }
 }

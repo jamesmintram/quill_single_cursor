@@ -13,6 +13,8 @@ const quillTwo = new Quill('#editor-two', {
 
 // const cursorsTwo = quillTwo.getModule('cursors');
 
+quillTwo.getModule('cursors').setScale(3);
+
 // cursorsTwo.createCursor('cursor', 'User 1', 'black');
 
 // function selectionChangeHandler(cursors) {

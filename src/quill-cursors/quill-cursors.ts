@@ -33,6 +33,10 @@ export default class QuillCursors {
     this._container.appendChild(element);
   }
 
+  public setScale(scale: number): void {
+    this._cursor.setScale(scale);
+  }
+
   public _moveCursor(range: IQuillRange): void {
     this._cursor.range = range;
     this._updateCursor(this._cursor);
@@ -64,6 +68,7 @@ export default class QuillCursors {
     // FIXME: This is probably a bad idea
     document.addEventListener('selectionchange', () => {
       this._quill.getSelection();
+      console.log('SELECTION CHANGES');
     });
   }
 
