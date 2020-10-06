@@ -1,4 +1,4 @@
-import IQuillCursorsOptions from './i-quill-cursors-options';
+import IQuillCursorOptions from './i-quill-cursor-options';
 import IQuillRange from './i-range';
 
 export default class Cursor {
@@ -22,7 +22,7 @@ export default class Cursor {
   private _caretEl: HTMLElement;
   private _scale = 1;
 
-  public build(options: IQuillCursorsOptions): HTMLElement {
+  public build(options: IQuillCursorOptions): HTMLElement {
     const element = document.createElement(Cursor.CONTAINER_ELEMENT_TAG);
     element.classList.add(Cursor.CURSOR_CLASS);
     element.id = `ql-cursor-caret`;

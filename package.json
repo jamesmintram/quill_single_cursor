@@ -1,7 +1,7 @@
 {
-  "name": "quill-cursors",
+  "name": "quill-cursor",
   "version": "3.0.1",
-  "description": "A multi cursor module for Quill.",
+  "description": "A cursor replacement module for Quill.",
   "keywords": [
     "quill",
     "module",
@@ -13,17 +13,13 @@
     "Alec Gibson <alec@reedsy.com>"
   ],
   "license": "MIT",
-  "main": "dist/quill-cursors.js",
+  "main": "dist/quill-cursor.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "NODE_ENV=production ./node_modules/.bin/webpack && npm run lint",
     "lint": "eslint '**/*'",
     "start": "./node_modules/.bin/webpack-dev-server --open",
     "test": "NODE_ENV=test jest --coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/reedsy/quill-cursors.git"
   },
   "devDependencies": {
     "@reedsy/eslint-config-reedsy": "github:reedsy/eslint-config-reedsy#2.0.0",

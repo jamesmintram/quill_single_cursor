@@ -5,7 +5,7 @@ const environment = process.env.NODE_ENV || 'development';
 
 const moduleBundle = {
   entry: {
-    'quill-cursors': './src/index.ts',
+    'quill-cursor': './src/index.ts',
   },
   module: {
     rules: [
@@ -30,7 +30,7 @@ const moduleBundle = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'QuillCursors',
+    library: 'QuillCursor',
     libraryExport: 'default',
     libraryTarget: 'umd',
   },

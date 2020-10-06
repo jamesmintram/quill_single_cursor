@@ -1,20 +1,20 @@
-import IQuillCursorsOptions from './i-quill-cursors-options';
+import IQuillCursorOptions from './i-quill-cursor-options';
 import Cursor from './cursor';
 import IQuillRange from './i-range';
 import template from './template';
 import ResizeObserver from 'resize-observer-polyfill';
 import Delta = require('quill-delta');
-export default class QuillCursors {
+export default class QuillCursor {
   private readonly _cursor: Cursor;
   private readonly _quill: any;
   private readonly _container: HTMLElement;
   private readonly _boundsContainer: HTMLElement;
-  private readonly _options: IQuillCursorsOptions;
+  private readonly _options: IQuillCursorOptions;
   private _currentSelection: IQuillRange;
   private _lastCaretStartIndex: number;
   private _lastCaretEndIndex: number;
 
-  public constructor(quill: any, options: IQuillCursorsOptions = {}) {
+  public constructor(quill: any, options: IQuillCursorOptions = {}) {
     this._quill = quill;
     this._options = this._setDefaults(options);
     this._container = this._quill.addContainer(this._options.containerClass);
@@ -64,12 +64,6 @@ export default class QuillCursors {
     editor.addEventListener('scroll', () => this._updateCursor(this._cursor));
     const resizeObserver = new ResizeObserver(() => this._updateCursor(this._cursor));
     resizeObserver.observe(editor);
-
-    // FIXME: This is probably a bad idea
-    document.addEventListener('selectionchange', () => {
-      this._quill.getSelection();
-      console.log('SELECTION CHANGES');
-    });
   }
 
   private _updateCursor(cursor: Cursor): void {
@@ -124,7 +118,7 @@ export default class QuillCursors {
     // before checking for the current selection
     window.setTimeout(() => {
       if (this._options.transformOnTextChange) {
-        this._transformCursors(delta);
+        this._transformCursor(delta);
       }
 
       if (this._options.selectionChangeSource) {
@@ -143,11 +137,11 @@ export default class QuillCursors {
     );
   }
 
-  private _setDefaults(options: IQuillCursorsOptions): IQuillCursorsOptions {
+  private _setDefaults(options: IQuillCursorOptions): IQuillCursorOptions {
     options = Object.assign({}, options);
 
     options.template = options.template || template;
-    options.containerClass = options.containerClass || 'ql-cursors';
+    options.containerClass = options.containerClass || 'ql-cursor';
 
     if (options.selectionChangeSource !== null) {
       options.selectionChangeSource = options.selectionChangeSource || this._quill.constructor.sources.API;
@@ -160,7 +154,7 @@ export default class QuillCursors {
     return options;
   }
 
-  private _transformCursors(delta: any): void {
+  private _transformCursor(delta: any): void {
     delta = new Delta(delta);
 
     if (this._cursor.range) {

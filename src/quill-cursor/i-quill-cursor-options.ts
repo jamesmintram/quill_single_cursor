@@ -1,4 +1,4 @@
-export default interface IQuillCursorsOptions {
+export default interface IQuillCursorOptions {
   template?: string;
   containerClass?: string;
   selectionChangeSource?: string;

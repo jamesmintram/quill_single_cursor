@@ -1,11 +1,11 @@
-Quill.register('modules/cursors', QuillCursors);
+Quill.register('modules/cursor', QuillCursor);
 const CURSOR_LATENCY = 10;
 const TEXT_LATENCY = 10;
 
 const quillTwo = new Quill('#editor-two', {
   theme: 'snow',
   modules: {
-    cursors: {
+    cursor: {
       transformOnTextChange: true,
     },
   },
@@ -13,7 +13,7 @@ const quillTwo = new Quill('#editor-two', {
 
 // const cursorsTwo = quillTwo.getModule('cursors');
 
-quillTwo.getModule('cursors').setScale(3);
+quillTwo.getModule('cursor').setScale(3);
 
 // cursorsTwo.createCursor('cursor', 'User 1', 'black');
 
